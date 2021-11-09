@@ -6,10 +6,11 @@ from enum import Enum #Crear enueraciones de strings
 #Pydantic
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic import PositiveInt, PaymentCardNumber, EmailStr
 
 #FastAPI
 from fastapi import FastAPI
-from fastapi import Body, Query, Path 
+from fastapi import Body, Query, Path
 #clase que permite decir que un parametro de una clase es de tipo Body, Query y Path para los Parameters
 
 
@@ -25,9 +26,21 @@ class HairColor(Enum):
     red = "red"
 
 class Location(BaseModel):
-    city: str
-    state: str
-    country: str
+    city: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    state: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    country: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
 
 class Person(BaseModel):
     first_name: str = Field(
@@ -38,10 +51,10 @@ class Person(BaseModel):
         ...,
         min_length=1,
         max_length=50)
-    age: int = Field(
-        ...,
-        gt=0,
-        le=115)
+    age: PositiveInt = Field(
+        ...)
+    email: EmailStr = Field(...)
+    card_number: Optional[PaymentCardNumber]
     hai_color: Optional[HairColor] = Field(default=None)
     is_married: Optional[bool] = Field(default=None)
 

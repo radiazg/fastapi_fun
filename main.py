@@ -55,8 +55,21 @@ class Person(BaseModel):
         ...)
     email: EmailStr = Field(...)
     card_number: Optional[PaymentCardNumber]
-    hai_color: Optional[HairColor] = Field(default=None)
+    hair_color: Optional[HairColor] = Field(default=None)
     is_married: Optional[bool] = Field(default=None)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "first_name": "Ricardo",
+                "last_name": "Diaz",
+                "age": 20,
+                "email": "latis@hotmail.com",
+                "card_number": "4000000000000002",
+                "hair_color": "black",
+                "is_married": True
+            }
+        }
 
 @app.get("/")
 def home():
@@ -119,4 +132,7 @@ def update_person(
 ):
     results = person.dict()
     results.update(location.dict())
-    return results
+    return {
+        "person":person,
+        "location": location
+    }

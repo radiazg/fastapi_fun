@@ -45,7 +45,7 @@ class Location(BaseModel):
         example="COL"
     )
 
-class Person(BaseModel):
+class PersonBase(BaseModel):
     first_name: str = Field(
         ...,
         min_length=1,
@@ -60,6 +60,8 @@ class Person(BaseModel):
     card_number: Optional[PaymentCardNumber]
     hair_color: Optional[HairColor] = Field(default=None)
     is_married: Optional[bool] = Field(default=None)
+
+class Person(PersonBase):
     password: str = Field(..., min_length=8)
 
     class Config:
@@ -76,21 +78,8 @@ class Person(BaseModel):
             }
         }
 
-class PersonOut(BaseModel):
-    first_name: str = Field(
-        ...,
-        min_length=1,
-        max_length=50)
-    last_name: str = Field(
-        ...,
-        min_length=1,
-        max_length=50)
-    age: PositiveInt = Field(
-        ...)
-    email: EmailStr = Field(...)
-    card_number: Optional[PaymentCardNumber]
-    hair_color: Optional[HairColor] = Field(default=None)
-    is_married: Optional[bool] = Field(default=None)
+class PersonOut(PersonBase):
+   pass
 
 @app.get("/")
 def home():

@@ -1,6 +1,6 @@
 #Python
 from typing import Optional
-from fastapi.param_functions import Path, Query
+#from fastapi.param_functions import Form, Path, Query
 from enum import Enum #Crear enueraciones de strings
 
 #Pydantic
@@ -10,7 +10,7 @@ from pydantic import PositiveInt, PaymentCardNumber, EmailStr
 
 #FastAPI
 from fastapi import FastAPI
-from fastapi import Body, Query, Path
+from fastapi import Body, Query, Path, Form
 #clase que permite decir que un parametro de una clase es de tipo Body, Query y Path para los Parameters
 from fastapi import status
 #Nos permite acceder a los diferentes codigos de status
@@ -82,6 +82,17 @@ class Person(PersonBase):
 
 class PersonOut(PersonBase):
    pass
+
+class LoginOut(BaseModel):
+    username: str = Field(
+        ...,
+        min_length=1,
+        max_length=20,
+        example="ricky2021"
+    )
+    message: str = Field(
+        default="Login Succesfully"
+    )
 
 @app.get(
     path="/",
@@ -168,3 +179,15 @@ def update_person(
         "person":person,
         "location": location
     }
+
+#Path Operation para enviar datos del formulario
+@app.post(
+    path="/login",
+    response_model=LoginOut,
+    status_code=status.HTTP_200_OK
+)
+def login(
+    username: str = Form(...),
+    password: str = Form(...)
+):
+    return LoginOut(username=username)

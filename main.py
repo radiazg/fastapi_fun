@@ -1,6 +1,5 @@
 #Python
 from typing import Optional
-#from fastapi.param_functions import Form, Path, Query
 from enum import Enum #Crear enueraciones de strings
 
 #Pydantic
@@ -10,7 +9,7 @@ from pydantic import PositiveInt, PaymentCardNumber, EmailStr
 
 #FastAPI
 from fastapi import FastAPI
-from fastapi import Body, Query, Path, Form, Header, Cookie
+from fastapi import Body, Query, Path, Form, Header, Cookie, UploadFile, File
 #clase que permite decir que un parametro de una clase es de tipo Body, Query y Path para los Parameters
 from fastapi import status
 #Nos permite acceder a los diferentes codigos de status
@@ -194,7 +193,6 @@ def login(
     return LoginOut(username=username)
 
 #Cookies and headers parameters
-
 @app.post(
     path="/contact",
     status_code=status.HTTP_200_OK
@@ -224,3 +222,17 @@ def contact(
     ads: Optional[str] = Cookie(default=None)
 ):
     return user_agent
+
+# Files
+
+@app.post(
+    path="/post-image"
+    )
+def post_image(
+    image: UploadFile = File(...)
+):
+    return {
+        "Filename": image.filename,
+        "Format": image.content_type,
+        "Size(kb)": round(len(image.file.read())/1024, ndigits=2)
+    }

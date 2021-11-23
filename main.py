@@ -12,6 +12,7 @@ from fastapi import FastAPI
 from fastapi import Body, Query, Path, Form, Header, Cookie, UploadFile, File
 #clase que permite decir que un parametro de una clase es de tipo Body, Query y Path para los Parameters
 from fastapi import status
+from fastapi import HTTPException
 #Nos permite acceder a los diferentes codigos de status
 
 
@@ -138,6 +139,9 @@ def show_person(
 ):
     return {name: age}
 
+# Lista de Personas
+persons = [1, 2, 3, 4, 5]
+
 # Validations : Path Parameters
 
 @app.get(
@@ -153,6 +157,11 @@ def show_person(
         example=91
         )
 ):
+    if person_id not in persons:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="¡This person does not exists!"
+        )
     return {person_id: "It exists"}
 
 # Validations: Request Body

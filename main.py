@@ -10,7 +10,7 @@ from pydantic import PositiveInt, PaymentCardNumber, EmailStr
 
 #FastAPI
 from fastapi import FastAPI
-from fastapi import Body, Query, Path, Form
+from fastapi import Body, Query, Path, Form, Header, Cookie
 #clase que permite decir que un parametro de una clase es de tipo Body, Query y Path para los Parameters
 from fastapi import status
 #Nos permite acceder a los diferentes codigos de status
@@ -190,4 +190,37 @@ def login(
     username: str = Form(...),
     password: str = Form(...)
 ):
+    #instanciamos la calse LoginOut
     return LoginOut(username=username)
+
+#Cookies and headers parameters
+
+@app.post(
+    path="/contact",
+    status_code=status.HTTP_200_OK
+)
+def contact(
+    first_name: str = Form(
+        ...,
+        max_length=30,
+        min_length=1,
+        example='Ricardo'
+
+    ),
+    last_name: str = Form(
+        ...,
+        max_length=30,
+        min_length=1,
+        example='Diaz'
+    ),
+    email: EmailStr = Form(..., example='ricardo@diaz.com'),
+    message: str = Form(
+        ...,
+        max_length=50,
+        min_length=20,
+        example='Hello, your project is very interesting, please call me for an oportunity of venture capital'
+    ),
+    user_agent: Optional[str] = Header(default=None),
+    ads: Optional[str] = Cookie(default=None)
+):
+    return user_agent

@@ -146,7 +146,8 @@ def create_person(
     path="/person/detail",
     status_code=status.HTTP_200_OK,
     tags=["Persons"],
-    summary="Show a person detail"
+    summary="Show a person detail",
+    deprecated=True
     )
 def show_person(
     #parametro name opcional y se valida que minimo tenga un caracter y max 50 y como defailt None
